@@ -1,5 +1,7 @@
+#Author Shereif Saleh
+#Y86 - Emulator
 class emulate():
-    def __init__(self,file,size = 0,text = 0, byte = None):
+    def __init__(self,file,size = 0,text = 0,byte = None):
         try: # Attempt read the file
             file_object = open(file,'r')
             self.file = file_object
