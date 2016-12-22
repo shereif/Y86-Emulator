@@ -95,8 +95,9 @@ def Instructions(Block):
     NewB = []
     while counter < len(Block) :
         #NewB = []
-        if Block[counter] == '30':
+        if Block[counter] == '30': # irmov
             print('\n')
+            print('________________________')
             print("Detected instruction 30")
             NewB = Block[counter:counter+6]
             print(NewB)
@@ -127,9 +128,10 @@ def Instructions(Block):
             elif temp[3] == '8':
                 Register['r8'] = Splitted
             counter += 6
+            print( Register )
             continue
 
-        if Block[counter] == '20':
+        if Block[counter] == '20': #rrmovl
             print('\n')
             print('________________________')
             print("Detected instruction 20")
@@ -176,11 +178,14 @@ def Instructions(Block):
                 Register['r7'] = ValueofFirstRegister
             elif temp[3] == '8':
                 Register['r8'] = ValueofFirstRegister
+            print(Register)
             counter += 2
             continue
 
-        if Block[counter] == 'e0':
+
+        if Block[counter] == 'e0': #movsbl
             print('\n')
+            print('________________________')
             print("Detected instruction e0")
             NewB = Block[counter:counter+6]
             print(NewB)
@@ -189,70 +194,54 @@ def Instructions(Block):
             Splitted = int(newSplitted,16)
             temp = ''.join(NewB) # This is the full line
 
-            if temp[2] == '0':
-                #print("hit0")
-                Register['r0'] = Register['r0'] + Splitted
-                PushedValue = Register['r0']
 
-            elif temp[2] == '1':
-                Register['r1'] = Register['r1'] + Splitted
-                PushedValue = Register['r1']
-
-            elif temp[2] == '2':
-                #print("hit2")
-                Register['r2'] = Register['r2'] + Splitted
-                print(Splitted)
-                PushedValue = Register['r2']
-
-            elif temp[2] == '3':
-                #print("hit3")
-                Register['r3'] = Register['r3'] + Splitted
-                PushedValue = Register['r3']
-
-            elif temp[2] == '4':
-                Register['r4'] = Register['r4'] + Splitted
-                PushedValue = Register['r4']
-
-            elif temp[2] == '5':
-                Register['r5'] = Register['r5'] + Splitted
-                PushedValue = Register['r5']
-
-            elif temp[2] == '6':
-                Register['r6'] = Register['r6'] + Splitted
-                PushedValue = Register['r6']
-
-            elif temp[2] == '7':
-                Register['r6'] = Register['r7'] + Splitted
-                PushedValue = Register['r7']
+            PushedValue = temp[4:]
 
 
             if temp[3] == '0':
-                Register['r0'] = PushedValue
-
+                PushedValue = Register['r0'] + int(temp[4:])
             elif temp[3] == '1':
-                Register['r1'] = PushedValue
-
+                PushedValue = Register['r1'] + int(temp[4:])
             elif temp[3] == '2':
-                Register['r2'] = PushedValue
-
+                PushedValue = Register['r2'] + int(temp[4:])
             elif temp[3] == '3':
-                Register['r3'] = PushedValue
-
+                PushedValue = Register['r3'] + int(temp[4:])
             elif temp[3] == '4':
-                Register['r4'] = PushedValue
-
+                PushedValue = Register['r4'] + int(temp[4:])
             elif temp[3] == '5':
-                Register['r5'] = PushedValue
-
+                PushedValue = Register['r5'] + int(temp[4:])
             elif temp[3] == '6':
-                Register['r6'] = PushedValue
-
+                PushedValue = Register['r6'] + int(temp[4:])
             elif temp[3] == '7':
+                PushedValue = Register['r7'] + int(temp[4:])
+
+            if temp[2] == '0':
+                Register['r0'] = PushedValue
+            elif temp[2] == '1':
+                Register['r1'] = PushedValue
+            elif temp[2] == '2':
+                Register['r2'] = PushedValue
+            elif temp[2] == '3':
+                Register['r3'] = PushedValue
+            elif temp[2] == '4':
+                Register['r4'] = PushedValue
+            elif temp[2] == '5':
+                Register['r5'] = PushedValue
+            elif temp[2] == '6':
+                Register['r6'] = PushedValue
+            elif temp[2] == '7':
                 Register['r7'] = PushedValue
+
+
+
+            print(Register)
+            print('\n')
+            #print(temp[2])
+
             counter += 6
             continue
 
-        if Block[counter] == '65':
+        if Block[counter] == '65': #cmpl
             Register1 = ''
             Register2 = ''
             print('\n')
@@ -274,13 +263,13 @@ def Instructions(Block):
             elif temp[2] == '3':
                 Register1 = Register['r3']
             elif temp[2] == '4':
-                Register1 = Register1['r4']
+                Register1 = Register['r4']
             elif temp[2] == '5':
                 Register1 = Register['r5']
             elif temp[2] == '6':
-                Register1 = Register1['r6']
+                Register1 = Register['r6']
             elif temp[2] == '7':
-                Register1 = Register1['r7']
+                Register1 = Register['r7']
 
             if temp[3] == '0':
                 Register2 = Register['r0']
@@ -291,13 +280,13 @@ def Instructions(Block):
             elif temp[3] == '3':
                 Register2 = Register['r3']
             elif temp[3] == '4':
-                Register2 = Register1['r4']
+                Register2 = Register['r4']
             elif temp[3] == '5':
                 Register2 = Register['r5']
             elif temp[3] == '6':
-                Register2 = Register1['r6']
+                Register2 = Register['r6']
             elif temp[3] == '7':
-                Register2 = Register1['r7']
+                Register2 = Register['r7']
 
             if (Register1 > Register2):
                 OF = 1
@@ -311,16 +300,43 @@ def Instructions(Block):
             counter += 2
             continue
 
-        if Block[counter] == '73':
+        if Block[counter] == '73': #je
             print('\n')
             print('________________________')
-            print("Detected instruction e0")
-
+            print("Detected instruction 73")
             NewB = Block[counter:counter+5]
-
             print(NewB)
 
-        counter+= 6
+            temp = ''.join(NewB)
+            Flipped = bigEndian(temp[2:])
+            #print(Flipped)
+            ChangedToInt = int(Flipped,16)
+
+            if ZF == 1:
+                #counter = ChangedToInt
+                print(ChangedToInt)
+            else:
+                print("Not Touched")
+            print("Counter is ", counter)
+            #set the displacement equal to counter.
+
+            counter+= 5
+            continue
+
+
+        if Block[counter] == 'd0': #movsbl
+            print('\n')
+            print("Detected instruction d0")
+            NewB = Block[counter:counter+6]
+            print(NewB)
+
+            temp = ''.join(NewB)
+            print(temp)
+            Splitted = temp[4:]
+            print(Splitted)
+
+            #print what my register has and add the displacement
+        counter += 6
         continue
 
 
@@ -330,7 +346,8 @@ if __name__ == '__main__':
     MemoryBlock = CreateMemoryBlock()
     FillInMemoryBlock(MemoryBlock)
     Instructions(MemoryBlock)
-    aList = ['10','20','30']
+    #print(MemoryBlock)
+    #print(MemoryBlock[67])
     print('\n')
     print("Updated registers")
     print(Register)
@@ -341,6 +358,3 @@ if __name__ == '__main__':
     #print(bigEndian(aList))
     #print(type(a))
     #print(''.join(a))
-
-
-    #print(MemoryBlock)

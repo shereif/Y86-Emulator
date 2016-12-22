@@ -76,7 +76,7 @@ class emulate():
         longByte = [x for x in longByte if x != '.byte'] # Remove .byte
 
         final = [[int(longByte[i],16),longByte[i+1]] for i in range(0,len(longByte),2)]
-
+        print(final)
         self.byte = final
         if self.byte == [ ]:
             return None
